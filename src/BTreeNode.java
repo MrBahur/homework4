@@ -146,10 +146,12 @@ public class BTreeNode {
         {
             leftLeaf.setKey(j,tmp.getKey(j));
             rightLeaf.setKey(j,tmp.getKey(j+getT()));
-            if(!tmp.getLeaf())
+        }
+        if(!tmp.getLeaf()) {
+            for(int j=0;j<=getT()-1;j++)
             {
-                leftLeaf.setKid(j,tmp.getKid(j));
-                rightLeaf.setKid(j,tmp.getKid(j+getT()));
+                leftLeaf.setKid(j, tmp.getKid(j));
+                rightLeaf.setKid(j, tmp.getKid(j + getT()));
             }
         }
         leftLeaf.setSize(getT()-1);
@@ -157,6 +159,9 @@ public class BTreeNode {
         for(int j=getSize()-1;j>=i;j--)
         {
             setKey(j+1,getKey(j));
+        }
+        for(int j=getSize();j>=i;j--)
+        {
             setKid(j+1,getKid(j));
         }
         setKey(i,tmpKey);
