@@ -1,15 +1,22 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BTree {
 
     public BTreeNode root;
     public final int t;
 
-    public BTree(int t){
-        this.t=t;
-        this.root= new BTreeNode(t);
+    public BTree(int t) {
+        this.t = t;
+        this.root = new BTreeNode(t);
     }
-    public BTree(String s){
-         this(Integer.parseInt(s));
+
+    public BTree(String s) {
+        this(Integer.parseInt(s));
     }
 
     /*
@@ -33,45 +40,50 @@ public class BTree {
         this.root = root;
     }
 
-    public void insert(String key)
-    {
-        BTreeNode tmp =getRoot();
-        if(tmp.isFull())
-        {
+    public void insert(String key) {
+        BTreeNode tmp = getRoot();
+        if (tmp.isFull()) {
             BTreeNode newRoot = new BTreeNode(getT());
-            newRoot.setKid(0,tmp);
+            newRoot.setKid(0, tmp);
             newRoot.setLeaf(false);
             setRoot(newRoot);
             newRoot.splitChild(0);
             newRoot.insert(key);
-        }
-        else
-        {
+        } else {
             tmp.insert(key);
         }
     }
-    public String Search(String key)
-    {
+
+    public String Search(String key) {
         return root.search(key);
     }
-    public void createFullTree(String location)
-    {
-        String curr;
+
+    public void createFullTree(String location) {
+        File friendsList = new File(location);
+        Scanner input = null;
+        try {
+            input = new Scanner(friendsList);
+            String line;
+            while (input.hasNextLine()) {
+                line = input.nextLine();
+                if (line.length() == 0) {
+                    continue;
+                }
+                this.insert(line);
+            }
+        } catch(FileNotFoundException ex){
+            ex.printStackTrace();
+        }
 
     }
-/*
-*
-* */
-        public static void main(String [] args)
-        {
-            int t=5;
-            BTree test = new BTree(t);
-            for(char a='a';a<='z';a++)
-            {
-                test.insert(a+"");
-            }
-            System.out.println(test.getRoot().search("a").compareTo("a")==0);
-            System.out.println(test.getRoot().search("1")==null);
-        }
+
+    /*
+    *
+    * */
+    public static void main(String[] args) {
+        int t = 2;
+        BTree test = new BTree(t);
+        test.createFullTree(System.getProperty("user.dir")+"/friends.txt");
+    }
 }
 
