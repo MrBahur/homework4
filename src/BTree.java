@@ -8,6 +8,9 @@ public class BTree {
         this.t=t;
         this.root= new BTreeNode(t);
     }
+    public BTree(String s){
+         this(Integer.parseInt(s));
+    }
 
     /*
     Getters:
@@ -53,6 +56,7 @@ public class BTree {
     }
     public void createFullTree(String location)
     {
+        String curr;
 
     }
 /*
