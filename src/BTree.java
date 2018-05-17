@@ -51,6 +51,10 @@ public class BTree {
     {
         return root.search(key);
     }
+    public void createFullTree(String location)
+    {
+
+    }
 /*
 *
 * */
