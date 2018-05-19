@@ -7,7 +7,6 @@ public class BTree {
 
     public BTreeNode root;
     public final int t;
-
     public BTree(int t) {
         this.t = t;
         this.root = new BTreeNode(t);
@@ -56,6 +55,11 @@ public class BTree {
         return root.search(key);
     }
 
+    @Override
+    public String toString() {
+        return root.toString();
+    }
+
     public void createFullTree(String location) {
         File friendsList = new File(location);
         Scanner input = null;
@@ -64,17 +68,13 @@ public class BTree {
             String line;
             while (input.hasNextLine()) {
                 line = input.nextLine();
-                if (line.length() == 0) {
-                    continue;
-                }
+                if (line.length() == 0) {continue;}
                 this.insert(line);
             }
         } catch(FileNotFoundException ex){
             ex.printStackTrace();
         }
-
     }
-
     /*
     *
     * */
