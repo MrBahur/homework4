@@ -1,5 +1,8 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 public class Messages implements Iterable<Message> {
 
@@ -62,11 +65,39 @@ public class Messages implements Iterable<Message> {
     }
 
     public void generateMessages(String location){
-
-
+        File messages = new File(location);
+        Scanner input;
+        Message aux = new Message();
+        try {
+            input = new Scanner(messages);
+            String line;
+            while (input.hasNextLine()) {
+                line = input.nextLine();
+                if (line.length() == 0) {continue;}
+              handleLine(line,aux);
+            }
+        } catch(FileNotFoundException ex){
+            ex.printStackTrace();
+        }
     }
 
-    private void Insert(Message toInsert){
+    private void insert(Message toInsert){
         getData().addLast(toInsert);
+    }
+    private void handleLine(String line, Message aux)
+    {
+        if(line.equals("#")) {
+            insert(aux);
+            aux = new Message();
+        }
+        if(line.contains("From:")){
+            aux.setSender(line.substring(5));
+        }
+        else if(line.contains("To:")) {
+            aux.setRecipient(line.substring(3));
+        }
+        else{
+            aux.setText(aux.getText()+line);
+        }
     }
 }
