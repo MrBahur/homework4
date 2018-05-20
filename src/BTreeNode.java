@@ -164,8 +164,20 @@ public class BTreeNode {
 
     @Override
     public String toString() {
-
-
-        return super.toString();
+        if(getSize()==0){
+            return "";
+        }
+        else {
+            return toString("", 0, 0);
+        }
+    }
+    private String toString(String str,int currentHeight,int nextHeight)
+    {
+        str = stringifyNode();
+        //need to continue
+        return str;
+    }
+    private String stringifyNode() {
+        return   String.join(",",getKeys());
     }
 }
