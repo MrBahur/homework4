@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-
 public class BTree {
 
     public BTreeNode root;
@@ -12,14 +11,12 @@ public class BTree {
         this.root = new BTreeNode(t);
     }
 
+    //Constructors
     public BTree(String s) {
         this(Integer.parseInt(s));
     }
 
-    /*
-    Getters:
-    ----------------------------------------
-    */
+   //Getters
 
     public BTreeNode getRoot() {
         return root;
@@ -28,10 +25,8 @@ public class BTree {
     public int getT() {
         return t;
     }
-    /*
-    Setters
-    ----------------------------------------
-    */
+
+   //Setters
 
     public void setRoot(BTreeNode root) {
         this.root = root;
@@ -50,7 +45,7 @@ public class BTree {
             tmp.insert(key);
         }
     }
-
+    //Methods
     public String Search(String key) {
         return root.search(key);
     }
@@ -75,9 +70,7 @@ public class BTree {
             ex.printStackTrace();
         }
     }
-    /*
-    *
-    * */
+    //to test and remove
     public static void main(String[] args) {
         int t = 2;
         BTree test = new BTree(t);

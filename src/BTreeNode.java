@@ -5,10 +5,7 @@ public class BTreeNode {
     private boolean isLeaf;
     private final int t;
 
-     /*
-     Constructors:
-     ----------------------------------------
-     */
+    //Constructors
     public BTreeNode(int t){
         this.t=t;
         isLeaf=true;
@@ -17,14 +14,8 @@ public class BTreeNode {
         kids = new BTreeNode[2*t];
     }
 
-    /*
-    ----------------------------------------
-    */
+    //Getters
 
-    /*
-    Getters:
-    ----------------------------------------
-    */
     private String[] getKeys(){
         return keys;
     }
@@ -46,13 +37,8 @@ public class BTreeNode {
     private int getT() {
         return t;
     }
-    /*
-    ----------------------------------------
-    */
-    /*
-    Setters
-    ----------------------------------------
-    */
+
+    //Setters
     private void setSize(int size){
         this.size=size;
     }
@@ -69,9 +55,7 @@ public class BTreeNode {
         kids[i]=kid;
     }
 
-    /*
-    ----------------------------------------
-    */
+    //Methods
     public boolean isFull(){
         return getSize()==getT()*2-1;
     }

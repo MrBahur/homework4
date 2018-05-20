@@ -4,6 +4,16 @@ public class Spams implements Iterable<Spam> {
 
     @Override
     public Iterator<Spam> iterator() {
-        return null;
+        return new Iterator<Spam>() {
+            @Override
+            public boolean hasNext() {
+                return false;
+            }
+
+            @Override
+            public Spam next() {
+                return null;
+            }
+        };
     }
 }
