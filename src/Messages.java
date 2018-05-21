@@ -74,12 +74,12 @@ public class Messages implements Iterable<Message> {
         Message aux = new Message();
         try {
             input = new Scanner(messages);
-            String line;
             while (input.hasNextLine()) {
-                line = input.nextLine();
+                String line = input.nextLine();
                 if (line.length() == 0) {continue;}
-              handleLine(list,line,aux);
+              aux = handleLine(list,line,aux);
             }
+            insertToList(list,aux);
         } catch(FileNotFoundException ex){
             ex.printStackTrace();
         }
@@ -89,7 +89,7 @@ public class Messages implements Iterable<Message> {
     private void insertToList(DoublyLinkedList<Message> list, Message toInsert){
         list.addLast(toInsert);
     }
-    private void handleLine(DoublyLinkedList<Message> list,String line, Message aux){
+    private Message handleLine(DoublyLinkedList<Message> list,String line, Message aux){
         if(line.equals("#")) {
             insertToList(list, aux);
             aux = new Message();
@@ -100,9 +100,10 @@ public class Messages implements Iterable<Message> {
         else if(line.contains("To:")) {
             aux.setRecipient(line.substring(3));
         }
-        else{
+        else if(!line.equals("#")){
             aux.setText(aux.getText()+line);
         }
+        return aux;
     }
     private void createArrayFromList(DoublyLinkedList<Message> list)
     {
@@ -113,5 +114,11 @@ public class Messages implements Iterable<Message> {
             list.setHead(list.getHead().getNext());
         }
         setData(data);
+    }
+    public static void main(String[] args){
+        String location =System.getProperty("user.dir")+"/messages.txt";
+        Messages test = new Messages();
+        test.generateMessages(location);
+
     }
 }

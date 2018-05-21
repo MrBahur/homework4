@@ -71,7 +71,7 @@ public class DoublyLinkedList<T> {
         Node<T> tmp = getLast();
         tmp.setNext(aux);
         setLast(aux);
-        last.setPrev(tmp);
+        getLast().setPrev(tmp);
         setSize(getSize()+1);
     }
 }
