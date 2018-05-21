@@ -6,47 +6,50 @@ import java.util.Scanner;
 
 public class Messages implements Iterable<Message> {
 
-    private DoublyLinkedList<Message> data;
-    private Node<Message> curr;
+    private Message[] data;
+    private int curr;
 
-    public Messages()
-    {
-        this.data = new DoublyLinkedList<>();
-        this.curr=null;
+    public Messages(){
+        this.data=null;
+        this.curr=0;
     }
 
     //Getters:
 
-    public Node<Message> getCurr() {
-        return curr;
+    public Message[] getData() {
+        return data;
     }
 
-    public DoublyLinkedList<Message> getData() {
-        return data;
+    public int getCurr() {
+        return curr;
     }
     //Setters:
 
-    public void setCurr(Node<Message> curr) {
-        this.curr = curr;
+
+    public void setData(Message[] data) {
+        this.data = data;
     }
 
+    public void setCurr(int curr) {
+        this.curr = curr;
+    }
     //Iterator:
 
     @Override
-    public Iterator<Message> iterator(){
-        setCurr(getData().getHead());
+    public Iterator<Message> iterator() {
         return new Iterator<Message>() {
             @Override
             public boolean hasNext() {
-                return getCurr()!=null;
+                return getData()!=null || getData().length>getCurr();
             }
+
             @Override
             public Message next() {
                 if(!hasNext())
                     throw new NoSuchElementException();
-                Node<Message> aux = getCurr();
-                setCurr(aux.getNext());
-                return (aux.getData());
+                Message tmp = getData()[getCurr()];
+                setCurr(getCurr()+1);
+                return tmp;
             }
         };
     }
@@ -65,6 +68,7 @@ public class Messages implements Iterable<Message> {
     }
 
     public void generateMessages(String location){
+        DoublyLinkedList<Message> list=new DoublyLinkedList<>();
         File messages = new File(location);
         Scanner input;
         Message aux = new Message();
@@ -74,20 +78,20 @@ public class Messages implements Iterable<Message> {
             while (input.hasNextLine()) {
                 line = input.nextLine();
                 if (line.length() == 0) {continue;}
-              handleLine(line,aux);
+              handleLine(list,line,aux);
             }
         } catch(FileNotFoundException ex){
             ex.printStackTrace();
         }
+        createArrayFromList(list);
     }
 
-    private void insert(Message toInsert){
-        getData().addLast(toInsert);
+    private void insertToList(DoublyLinkedList<Message> list, Message toInsert){
+        list.addLast(toInsert);
     }
-    private void handleLine(String line, Message aux)
-    {
+    private void handleLine(DoublyLinkedList<Message> list,String line, Message aux){
         if(line.equals("#")) {
-            insert(aux);
+            insertToList(list, aux);
             aux = new Message();
         }
         if(line.contains("From:")){
@@ -99,5 +103,15 @@ public class Messages implements Iterable<Message> {
         else{
             aux.setText(aux.getText()+line);
         }
+    }
+    private void createArrayFromList(DoublyLinkedList<Message> list)
+    {
+        int size =list.getSize();
+        Message [] data = new Message[size];
+        for(int i=0;i<size;i++){
+            data[i]=list.getHead().getData();
+            list.setHead(list.getHead().getNext());
+        }
+        setData(data);
     }
 }

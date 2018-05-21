@@ -4,15 +4,14 @@ public class Message {
     private String sender;
     private String text;
 
-    public Message(){
-        this.recipient="";
-        this.sender="";
-        this.text="";
-    }
-    public Message(String recipient,String sender, String text){
+
+    private Message(String recipient,String sender, String text){
         this.recipient = recipient;
         this.sender = sender;
         this.text = text;
+    }
+    public Message(){
+        this("","","");
     }
 
     /*

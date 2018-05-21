@@ -47,25 +47,32 @@ public class DoublyLinkedList<T> {
             throw new NullPointerException();
         Node<T> aux = new Node<>(null,null,toInsert);
         if(getSize()==0){
-            setHead(aux);
-            setLast(aux);
-            setSize(1);
+            addFirst(aux);
         }
-        else if(getSize()==1)
-        {
-            getHead().setNext(aux);
-            setLast(aux);
-            aux.setPrev(getHead());
-            setSize(2);
+        else if(getSize()==1)        {
+           addSecond(aux);
         }
-        else
-        {
-            Node<T> tmp = getLast();
-            tmp.setNext(aux);
-            setLast(aux);
-            last.setPrev(tmp);
-            setSize(getSize()+1);
+        else{
+            addElse(aux);
         }
+    }
+    private void addFirst(Node<T> aux){
+        setHead(aux);
+        setLast(aux);
+        setSize(1);
+    }
+    private void addSecond(Node<T> aux){
+        getHead().setNext(aux);
+        setLast(aux);
+        aux.setPrev(getHead());
+        setSize(2);
+    }
+    private void addElse(Node<T> aux){
+        Node<T> tmp = getLast();
+        tmp.setNext(aux);
+        setLast(aux);
+        last.setPrev(tmp);
+        setSize(getSize()+1);
     }
 }
 
