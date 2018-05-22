@@ -5,11 +5,16 @@ public class Spam {
 
     //Constructors:
 
-    public Spam(String word, float ratio) {
+    private Spam(String word, float ratio) {
+        if (ratio<0.0|ratio>100.0)
+            throw new IllegalArgumentException();
         this.word=word;
         this.ratio=ratio;
     }
 
+    public Spam(){
+        this("",0);
+    }
     //Getters:
 
     public float getRatio() {

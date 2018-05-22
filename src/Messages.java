@@ -40,7 +40,7 @@ public class Messages implements Iterable<Message> {
         return new Iterator<Message>() {
             @Override
             public boolean hasNext() {
-                return getData()!=null || getData().length>getCurr();
+                return getData()!=null && getData().length>getCurr();
             }
 
             @Override
@@ -57,7 +57,7 @@ public class Messages implements Iterable<Message> {
 
     //methods
 
-    public String findSpams(String locaition, BTree friends)
+    public String findSpams(String location, BTree friends)
     {
 
         return null;
@@ -70,10 +70,9 @@ public class Messages implements Iterable<Message> {
     public void generateMessages(String location){
         DoublyLinkedList<Message> list=new DoublyLinkedList<>();
         File messages = new File(location);
-        Scanner input;
         Message aux = new Message();
         try {
-            input = new Scanner(messages);
+            Scanner input = new Scanner(messages);
             while (input.hasNextLine()) {
                 String line = input.nextLine();
                 if (line.length() == 0) {continue;}
