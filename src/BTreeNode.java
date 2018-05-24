@@ -1,9 +1,14 @@
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
+
 public class BTreeNode {
     private String[] keys;
     private BTreeNode [] kids;
     private int size;
     private boolean isLeaf;
     private final int t;
+    private int height;
 
     //Constructors
     public BTreeNode(int t){
@@ -12,10 +17,14 @@ public class BTreeNode {
         size=0;
         keys = new String[2*t-1];
         kids = new BTreeNode[2*t];
+        height =0;
     }
 
     //Getters
 
+    public int getHeight(){
+        return height;
+    }
     private String[] getKeys(){
         return keys;
     }
@@ -25,10 +34,10 @@ public class BTreeNode {
     private BTreeNode[] getKids() {
         return kids;
     }
-    private BTreeNode getKid(int i){
+    public BTreeNode getKid(int i){
         return kids[i];
     }
-    private int getSize(){
+    public int getSize(){
         return size;
     }
     private boolean getLeaf(){
@@ -42,7 +51,6 @@ public class BTreeNode {
     private void setSize(int size){
         this.size=size;
     }
-
     public void setLeaf(boolean leaf) {
         isLeaf = leaf;
     }
@@ -53,6 +61,9 @@ public class BTreeNode {
     public void setKid(int i, BTreeNode kid)
     {
         kids[i]=kid;
+    }
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     //Methods
@@ -110,12 +121,10 @@ public class BTreeNode {
         BTreeNode tmp = this.getKid(i);
         String tmpKey = tmp.getKey(getT()-1);
         setLeavesForSpilt(rightLeaf,leftLeaf,tmp);
-        for(int j=getSize()-1;j>=i;j--){
+        for(int j=getSize()-1;j>=i;j--)
             setKey(j+1,getKey(j));
-        }
-        for(int j=getSize();j>=i;j--){
+        for(int j=getSize();j>=i;j--)
             setKid(j+1,getKid(j));
-        }
         setKey(i,tmpKey);
         setSize(getSize()+1);
         setKid(i,leftLeaf);
@@ -130,8 +139,6 @@ public class BTreeNode {
     }
     private void setLeavesForSpilt(BTreeNode rightLeaf, BTreeNode leftLeaf, BTreeNode tmp)
     {
-        leftLeaf.setLeaf(tmp.getLeaf());
-        rightLeaf.setLeaf(tmp.getLeaf());
         for(int j=0;j<getT()-1;j++){
             leftLeaf.setKey(j,tmp.getKey(j));
             rightLeaf.setKey(j,tmp.getKey(j+getT()));
@@ -142,26 +149,22 @@ public class BTreeNode {
                 rightLeaf.setKid(j, tmp.getKid(j + getT()));
             }
         }
+        setValuesForLeavesInSplit(rightLeaf,leftLeaf,tmp);
+    }
+    private void setValuesForLeavesInSplit(BTreeNode rightLeaf, BTreeNode leftLeaf, BTreeNode tmp){
+        leftLeaf.setLeaf(tmp.getLeaf());
+        rightLeaf.setLeaf(tmp.getLeaf());
+        leftLeaf.setHeight(tmp.getHeight());
+        rightLeaf.setHeight(tmp.getHeight());
         leftLeaf.setSize(getT()-1);
         rightLeaf.setSize(getT()-1);
     }
 
-    @Override
-    public String toString() {
-        if(getSize()==0){
-            return "";
-        }
-        else {
-            return toString("", 0, 0);
-        }
-    }
-    private String toString(String str,int currentHeight,int nextHeight)
-    {
-        str = stringifyNode();
-        //need to continue
-        return str;
-    }
-    private String stringifyNode() {
-        return   String.join(",",getKeys());
+    public String stringifyNode() {
+        String joined =
+                Stream.of(getKeys())
+                        .filter(s -> s != null && !s.isEmpty())
+                        .collect(joining(","));
+        return   joined;
     }
 }

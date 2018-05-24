@@ -99,12 +99,19 @@ public class DoublyLinkedList<T> {
     }
 
     public T removeLast(){
+        Node<T> aux = getLast();
         if(getSize()==0)
             throw new NoSuchElementException();
-        Node<T> aux = getLast();
-        setLast(aux.getPrev());
-        getLast().setNext(null);
-        aux.setPrev(null);
+        if(getSize()==1){
+            setLast(null);
+            setHead(null);
+        }
+        else {
+            setLast(aux.getPrev());
+            getLast().setNext(null);
+            aux.setPrev(null);
+        }
+        setSize(getSize()-1);
         return aux.getData();
     }
 }

@@ -4,11 +4,13 @@ import java.util.Scanner;
 
 public class BTree {
 
-    public BTreeNode root;
-    public final int t;
-    public BTree(int t) {
+    private BTreeNode root;
+    private final int t;
+    private int size;
+    private BTree(int t) {
         this.t = t;
         this.root = new BTreeNode(t);
+        this.size=0;
     }
 
     //Constructors
@@ -18,17 +20,25 @@ public class BTree {
 
    //Getters
 
-    public BTreeNode getRoot() {
+    public int getSize() {
+        return size;
+    }
+
+    private BTreeNode getRoot() {
         return root;
     }
 
-    public int getT() {
+    private int getT() {
         return t;
     }
 
    //Setters
 
-    public void setRoot(BTreeNode root) {
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    private void setRoot(BTreeNode root) {
         this.root = root;
     }
 
@@ -38,21 +48,18 @@ public class BTree {
             BTreeNode newRoot = new BTreeNode(getT());
             newRoot.setKid(0, tmp);
             newRoot.setLeaf(false);
+            newRoot.setHeight(newRoot.getKid(0).getHeight()+1);
             setRoot(newRoot);
             newRoot.splitChild(0);
             newRoot.insert(key);
         } else {
             tmp.insert(key);
         }
+        setSize(getSize()+1);
     }
     //Methods
     public String Search(String key) {
         return root.search(key);
-    }
-
-    @Override
-    public String toString() {
-        return root.toString();
     }
 
     public void createFullTree(String location) {
@@ -70,11 +77,45 @@ public class BTree {
             ex.printStackTrace();
         }
     }
+
+
+    public String BFS(){
+        String toReturn = "";
+        Queue queue = new Queue();
+        queue.enqueue(getRoot());
+        while(!queue.isEmpty()){
+            toReturn= function(toReturn,queue,queue.dequeue());
+        }
+        return toReturn;
+    }
+
+    private String function(String tmp,Queue queue ,Object obj){
+        if(obj instanceof String)
+            return function(tmp,(String)obj);
+        if(obj instanceof BTreeNode)
+            return function(tmp,queue,(BTreeNode)obj);
+        throw new IllegalArgumentException();
+    }
+    private String function(String tmp, String toPush){
+        tmp+=toPush;
+        return tmp;
+    }
+
+    private String function(String tmp, Queue queue, BTreeNode node){
+        for(int i=0;i<=node.getSize();i++){
+            queue.enqueue(node.getKid(i));
+            if(i<node.getSize())
+                queue.enqueue("|");
+        }
+        return tmp+node.stringifyNode();
+    }
+
     //to test and remove
     public static void main(String[] args) {
         int t = 2;
         BTree test = new BTree(t);
         test.createFullTree(System.getProperty("user.dir")+"/friends.txt");
+        System.out.print(test.BFS());
     }
 }
 

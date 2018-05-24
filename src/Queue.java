@@ -13,7 +13,7 @@ public class Queue {
     }
 
 
-
+    //methods
     public void enqueue(Object toInsert){
         if((!(toInsert instanceof BTreeNode))&(!(toInsert instanceof String)))
             throw new IllegalArgumentException();
@@ -21,5 +21,11 @@ public class Queue {
     }
     public Object dequeue(){
         return getData().removeLast();
+    }
+    public Object pick(){
+        return getData().getLast();
+    }
+    boolean isEmpty(){
+        return getData().getSize()==0;
     }
 }
