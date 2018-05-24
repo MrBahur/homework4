@@ -1,7 +1,7 @@
 public class HashTable {
 
 
-    int hashFunction(){
+    int hashFunction(String toHash){
 
         return 0;
     }

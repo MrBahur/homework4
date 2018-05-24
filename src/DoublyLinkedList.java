@@ -42,12 +42,13 @@ public class DoublyLinkedList<T> {
 
     //methods:
 
+    
     public void addLast(T toInsert) {
         if(toInsert==null)
             throw new NullPointerException();
         Node<T> aux = new Node<>(null,null,toInsert);
         if(getSize()==0){
-            addFirst(aux);
+            addFirstForAddLast(aux);
         }
         else if(getSize()==1)        {
            addSecond(aux);
@@ -56,7 +57,7 @@ public class DoublyLinkedList<T> {
             addElse(aux);
         }
     }
-    private void addFirst(Node<T> aux){
+    private void addFirstForAddLast(Node<T> aux){
         setHead(aux);
         setLast(aux);
         setSize(1);
