@@ -1,5 +1,4 @@
 import java.util.stream.Stream;
-
 import static java.util.stream.Collectors.joining;
 
 public class BTreeNode {
@@ -40,7 +39,7 @@ public class BTreeNode {
     public int getSize(){
         return size;
     }
-    private boolean getLeaf(){
+    public boolean getLeaf(){
         return isLeaf;
     }
     private int getT() {
@@ -161,10 +160,7 @@ public class BTreeNode {
     }
 
     public String stringifyNode() {
-        String joined =
-                Stream.of(getKeys())
-                        .filter(s -> s != null && !s.isEmpty())
-                        .collect(joining(","));
+        String joined = Stream.of(getKeys()).filter(s -> s != null && !s.isEmpty()).collect(joining(","));
         return   joined;
     }
 }

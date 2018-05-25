@@ -77,37 +77,42 @@ public class BTree {
             ex.printStackTrace();
         }
     }
-
-
     public String BFS(){
         String toReturn = "";
         Queue queue = new Queue();
         queue.enqueue(getRoot());
-        while(!queue.isEmpty()){
-            toReturn= function(toReturn,queue,queue.dequeue());
+        WrapInt currentHeight = new WrapInt(getRoot().getHeight()+1);
+        while (!queue.isEmpty()){
+            Object obj = queue.dequeue();
+            toReturn = function(queue,toReturn, obj, currentHeight);
         }
         return toReturn;
     }
-
-    private String function(String tmp,Queue queue ,Object obj){
+    private String function(Queue queue,String toReturn, Object obj, WrapInt currentHeight){
         if(obj instanceof String)
-            return function(tmp,(String)obj);
-        if(obj instanceof BTreeNode)
-            return function(tmp,queue,(BTreeNode)obj);
-        throw new IllegalArgumentException();
+            toReturn+=(String)obj;
+        else if(obj instanceof BTreeNode)
+            toReturn=function(queue,toReturn,(BTreeNode)obj,currentHeight);
+        else
+            throw new IllegalArgumentException();
+        return toReturn;
     }
-    private String function(String tmp, String toPush){
-        tmp+=toPush;
-        return tmp;
-    }
-
-    private String function(String tmp, Queue queue, BTreeNode node){
-        for(int i=0;i<=node.getSize();i++){
-            queue.enqueue(node.getKid(i));
-            if(i<node.getSize())
-                queue.enqueue("|");
+    private String function(Queue queue, String toReturn, BTreeNode node, WrapInt currentHeight){
+         if((node.getHeight()==currentHeight.getValue())&!node.getLeaf()){
+            queue.enqueue("^");
         }
-        return tmp+node.stringifyNode();
+        else if(!node.getLeaf()){
+            queue.enqueue("#");
+        }
+        if(!node.getLeaf()){
+            for(int i=0;i<=node.getSize();i++){
+                queue.enqueue(node.getKid(i));
+                if(i<node.getSize())
+                    queue.enqueue("|");
+            }
+        }
+        currentHeight.setValue(node.getHeight());
+        return toReturn+node.stringifyNode();
     }
 
     //to test and remove
@@ -115,7 +120,7 @@ public class BTree {
         int t = 2;
         BTree test = new BTree(t);
         test.createFullTree(System.getProperty("user.dir")+"/friends.txt");
-        System.out.print(test.BFS());
+        System.out.println(test.BFS());
     }
 }
 
