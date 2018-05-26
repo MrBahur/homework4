@@ -63,7 +63,32 @@ public class Messages implements Iterable<Message> {
         return null;
     }
     public void createHashTables(String M){
-        int m = Integer.parseInt(M);
+        HashTable table[] = new HashTable[getData().length];
+        int i=0;
+        for (Message m:getData()) {
+            String text = m.getText();
+            table[i] = new HashTable(M);
+            handleText(text,table[i]);
+        }
+    }
+    private void handleText(String text,HashTable table){
+        StringBuilder word = new StringBuilder();
+        for(int i=0; i<text.length();i++){
+            if(text.charAt(i)!=' '){
+                word.append(text.charAt(i));
+            }
+            else{
+                String toInsert = handleWord(word);
+                table.insert(toInsert);
+                word.delete(0,word.length());
+            }
+        }
+    }
+    private String handleWord(StringBuilder word){
+            //would have been cooler if we needed to make Loan and loan be the same
+            //and also remove non letters char (such as .,- etc..)
+            //did it and only then saw at the forum that its unnecessary
+        return word.toString();
 
     }
 

@@ -77,8 +77,14 @@ public class BTree {
             ex.printStackTrace();
         }
     }
-    public String BFS(){
-        String toReturn = "";
+
+    @Override
+    public String toString() {
+        return BFS().toString();
+    }
+
+    private StringBuilder BFS(){
+        StringBuilder toReturn = new StringBuilder();
         Queue queue = new Queue();
         queue.enqueue(getRoot());
         WrapInt currentHeight = new WrapInt(getRoot().getHeight()+1);
@@ -88,16 +94,16 @@ public class BTree {
         }
         return toReturn;
     }
-    private String function(Queue queue,String toReturn, Object obj, WrapInt currentHeight){
+    private StringBuilder function(Queue queue,StringBuilder toReturn, Object obj, WrapInt currentHeight){
         if(obj instanceof String)
-            toReturn+=(String)obj;
+            toReturn.append((String)obj);
         else if(obj instanceof BTreeNode)
-            toReturn=function(queue,toReturn,(BTreeNode)obj,currentHeight);
+            function(queue,toReturn,(BTreeNode)obj,currentHeight);
         else
             throw new IllegalArgumentException();
         return toReturn;
     }
-    private String function(Queue queue, String toReturn, BTreeNode node, WrapInt currentHeight){
+    private void function(Queue queue, StringBuilder toReturn, BTreeNode node, WrapInt currentHeight){
          if((node.getHeight()==currentHeight.getValue())&!node.getLeaf()){
             queue.enqueue("^");
         }
@@ -112,7 +118,7 @@ public class BTree {
             }
         }
         currentHeight.setValue(node.getHeight());
-        return toReturn+node.stringifyNode();
+        toReturn.append(node.stringifyNode());
     }
 
     //to test and remove
