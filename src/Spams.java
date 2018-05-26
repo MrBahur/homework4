@@ -37,6 +37,7 @@ public class Spams implements Iterable<Spam> {
 
     @Override
     public Iterator<Spam> iterator() {
+        setCurr(0);
         return new Iterator<Spam>() {
             @Override
             public boolean hasNext() {
@@ -45,8 +46,9 @@ public class Spams implements Iterable<Spam> {
 
             @Override
             public Spam next(){
-                if(!hasNext())
+                if(!hasNext()) {
                     throw new NoSuchElementException();
+                }
                 Spam aux = getData()[getCurr()];
                 setCurr(getCurr()+1);
                 return aux;
@@ -74,7 +76,7 @@ public class Spams implements Iterable<Spam> {
     private Spam handleLine(DoublyLinkedList<Spam> list, String line, Spam aux){
         int i;
         for(i=0;line.charAt(i)!=' ';i++);
-        aux.setWord(line.substring(0,i-1));
+        aux.setWord(line.substring(0,i));
         aux.setRatio(Float.parseFloat(line.substring(i+1)));
         list.addLast(aux);
         return new Spam();

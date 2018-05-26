@@ -61,6 +61,14 @@ public class BTree {
     public String Search(String key) {
         return root.search(key);
     }
+    public boolean Search(String key1,String key2){
+        if((Search(key1+" & "+key2)==null)&&Search(key2+" & "+key1)==null){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
 
     public void createFullTree(String location) {
         File friendsList = new File(location);

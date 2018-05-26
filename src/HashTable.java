@@ -10,6 +10,9 @@ public class HashTable {
         this.m=m;
         this.size=0;
         this.list = new HashList[m];
+        for(int i=0;i<m;i++){
+            setList(new HashList(),i);
+        }
     }
     public HashTable(String s){
         this(Integer.parseInt(s));
@@ -24,7 +27,7 @@ public class HashTable {
     public HashList[] getLists() {
         return list;
     }
-    private HashList getList(int i){
+    public HashList getList(int i){
         return getLists()[i];
     }
 
@@ -37,10 +40,16 @@ public class HashTable {
         this.size = size;
     }
 
-    private int hashFunction(String toHash){
+    public int hashFunction(String toHash){
 
         return 0;
     }
+
+    public void setList(HashList list, int i) {
+        HashList[] lists = getLists();
+        lists[i]=list;
+    }
+    //Methods
 
     public void insert(String toInsert){
         HashList list = getList(hashFunction(toInsert));

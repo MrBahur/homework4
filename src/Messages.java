@@ -8,10 +8,12 @@ public class Messages implements Iterable<Message> {
 
     private Message[] data;
     private int curr;
+    private HashTable[] hashTables;
 
     public Messages(){
         this.data=null;
         this.curr=0;
+        this.hashTables=null;
     }
 
     //Getters:
@@ -23,6 +25,11 @@ public class Messages implements Iterable<Message> {
     public int getCurr() {
         return curr;
     }
+
+    public HashTable[] getHashTables() {
+        return hashTables;
+    }
+
     //Setters:
 
 
@@ -33,10 +40,16 @@ public class Messages implements Iterable<Message> {
     public void setCurr(int curr) {
         this.curr = curr;
     }
+
+    public void setHashTables(HashTable[] hashTables) {
+        this.hashTables = hashTables;
+    }
+
     //Iterator:
 
     @Override
     public Iterator<Message> iterator() {
+        setCurr(0);
         return new Iterator<Message>() {
             @Override
             public boolean hasNext() {
@@ -59,8 +72,38 @@ public class Messages implements Iterable<Message> {
 
     public String findSpams(String location, BTree friends)
     {
+        Spams spams = new Spams(location);
+        HashTable[] hashTables = getHashTables();
+        StringBuilder toReturn = new StringBuilder();
+        boolean areFriends=false;
+        boolean isSpam=false;
+        int i=0;
+        for (Message m:getData()) {
+            areFriends = friends.Search(m.getRecipient(),m.getSender());
+            if(!areFriends){
+                isSpam =checkSpam(spams,hashTables[i]);
+            }
+            if(isSpam) {
+                toReturn.append(i);
+                toReturn.append(',');
+                isSpam=false;
+            }
+            i++;
+        }
+        toReturn.deleteCharAt(toReturn.length()-1);
+        return toReturn.toString();
+    }
 
-        return null;
+    private boolean checkSpam(Spams spams,HashTable hashTable){
+        for (Spam s:spams) {
+            String word = s.getWord();
+            HashList list = hashTable.getList(hashTable.hashFunction(word));
+            HashListElement element = list.search(word);
+            if(element!=null&&(float)100*element.getNumberOfInstances()/hashTable.getSize()>=s.getRatio()){
+                return true;
+            }
+        }
+        return false;
     }
     public void createHashTables(String M){
         HashTable table[] = new HashTable[getData().length];
@@ -69,7 +112,9 @@ public class Messages implements Iterable<Message> {
             String text = m.getText();
             table[i] = new HashTable(M);
             handleText(text,table[i]);
+            i++;
         }
+        setHashTables(table);
     }
     private void handleText(String text,HashTable table){
         StringBuilder word = new StringBuilder();
