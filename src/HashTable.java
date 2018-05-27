@@ -41,8 +41,11 @@ public class HashTable {
     }
 
     public int hashFunction(String toHash){
-
-        return 0;
+        int hash = 7;
+        for(int i=0;i<toHash.length();i++){
+            hash = hash*31+toHash.charAt(i);
+        }
+        return Math.abs(hash%getM());
     }
 
     public void setList(HashList list, int i) {

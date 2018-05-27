@@ -33,7 +33,7 @@ public class Runner {
 		String spamMessages = messages.findSpams(System.getProperty("user.dir")+"/spam_words.txt", btree);
 		
 		//create a file with the program's expected output
-		createOutputFile(treeLayout, spamMessages, System.getProperty("user.dir")+"/output.txt");
+		//createOutputFile(treeLayout, spamMessages, System.getProperty("user.dir")+"/output.txt");
 			    
 	}
 

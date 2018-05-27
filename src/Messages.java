@@ -118,8 +118,8 @@ public class Messages implements Iterable<Message> {
     }
     private void handleText(String text,HashTable table){
         StringBuilder word = new StringBuilder();
-        for(int i=0; i<text.length();i++){
-            if(text.charAt(i)!=' '){
+        for(int i=0; i<=text.length();i++){
+            if(i!=text.length()&&text.charAt(i)!=' '){
                 word.append(text.charAt(i));
             }
             else{
