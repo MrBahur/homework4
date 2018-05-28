@@ -2,25 +2,30 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+//Constructors
+
+
 public class BTree {
 
     private BTreeNode root;
     private final int t;
     private int size;
     private BTree(int t) {
+        if(t<1)
+            throw new IllegalArgumentException();
         this.t = t;
         this.root = new BTreeNode(t);
         this.size=0;
     }
 
-    //Constructors
+
     public BTree(String s) {
         this(Integer.parseInt(s));
     }
 
    //Getters
 
-    public int getSize() {
+    private int getSize() {
         return size;
     }
 
@@ -34,15 +39,23 @@ public class BTree {
 
    //Setters
 
-    public void setSize(int size) {
+    private void setSize(int size) {
+        if(size<0)
+            throw new IllegalArgumentException();
         this.size = size;
     }
 
     private void setRoot(BTreeNode root) {
+        if(root==null)
+            throw new IllegalArgumentException();
         this.root = root;
     }
 
     public void insert(String key) {
+        if(key==null)
+            throw new NullPointerException();
+        if(key.length()==0)
+            throw new IllegalArgumentException();
         BTreeNode tmp = getRoot();
         if (tmp.isFull()) {
             BTreeNode newRoot = new BTreeNode(getT());
@@ -58,11 +71,17 @@ public class BTree {
         setSize(getSize()+1);
     }
     //Methods
-    public String Search(String key) {
+    public String search(String key) {
+        if(key==null)
+            throw new NullPointerException();
+        if(key.length()==0)
+            throw new IllegalArgumentException();
         return root.search(key);
     }
-    public boolean Search(String key1,String key2){
-        if((Search(key1+" & "+key2)==null)&&Search(key2+" & "+key1)==null){
+    public boolean search(String key1, String key2){
+        if(key1==null|key2==null)
+            throw new NullPointerException();
+        if((search(key1+" & "+key2)==null)&& search(key2+" & "+key1)==null){
             return false;
         }
         else{
@@ -71,6 +90,8 @@ public class BTree {
     }
 
     public void createFullTree(String location) {
+        if(location==null)
+            throw new NullPointerException();
         File friendsList = new File(location);
         Scanner input = null;
         try {
@@ -127,14 +148,6 @@ public class BTree {
         }
         currentHeight.setValue(node.getHeight());
         toReturn.append(node.stringifyNode());
-    }
-
-    //to test and remove
-    public static void main(String[] args) {
-        int t = 2;
-        BTree test = new BTree(t);
-        test.createFullTree(System.getProperty("user.dir")+"/friends.txt");
-        System.out.println(test.BFS());
     }
 }
 

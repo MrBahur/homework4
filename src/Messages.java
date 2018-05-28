@@ -79,7 +79,7 @@ public class Messages implements Iterable<Message> {
         boolean isSpam=false;
         int i=0;
         for (Message m:getData()) {
-            areFriends = friends.Search(m.getRecipient(),m.getSender());
+            areFriends = friends.search(m.getRecipient(),m.getSender());
             if(!areFriends){
                 isSpam =checkSpam(spams,hashTables[i]);
             }

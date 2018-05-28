@@ -86,32 +86,34 @@ public class BTreeNode {
         }
     }
 
-    public void insert(String key)
-    {
+    public void insert(String key){
         int i=getSize()-1;
-        if(getLeaf()){
-            while(i>=0&&isLess(key,getKey(i))){
-                setKey(i+1,getKey(i));
-                i--;
-            }
-            setKey(i+1,key);
-            setSize(getSize()+1);
+        if(getLeaf())
+            handleLeaf(i,key);
+        else
+            handleNotLeaf(i,key);
+    }
+    private void handleLeaf(int i,String key){
+        while(i>=0&&isLess(key,getKey(i))){
+            setKey(i+1,getKey(i));
+            i--;
         }
-        else{
-            while (i>=0&&isLess(key,getKey(i))){
-                i--;
-            }
-            i++;
-            BTreeNode tmp = getKid(i);
-            if(tmp.isFull()){
-                splitChild(i);
-                if(isLarge(key,tmp.getKey(i))) {
-                    i++;
-                }
-            }
-            tmp=getKid(i);
-            tmp.insert(key);
+        setKey(i+1,key);
+        setSize(getSize()+1);
+    }
+    private void handleNotLeaf(int i, String key){
+        while (i>=0&&isLess(key,getKey(i))){
+            i--;
         }
+        i++;
+        BTreeNode tmp = getKid(i);
+        if(tmp.isFull()){
+            splitChild(i);
+            if(isLarge(key,tmp.getKey(i)))
+                i++;
+        }
+        tmp=getKid(i);
+        tmp.insert(key);
     }
     public void splitChild (int i)
     {

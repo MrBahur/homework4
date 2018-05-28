@@ -5,7 +5,7 @@ public class HashTable {
 
     //Constructors:
     private HashTable(int m){
-        if(m<=0)
+        if(m<1)
             throw new IllegalArgumentException();
         this.m=m;
         this.size=0;
@@ -55,6 +55,10 @@ public class HashTable {
     //Methods
 
     public void insert(String toInsert){
+        if(toInsert==null)
+            throw new NullPointerException();
+        if(toInsert.length()==0)
+            throw new IllegalArgumentException();
         HashList list = getList(hashFunction(toInsert));
         list.insert(toInsert);
         setSize(getSize()+1);
