@@ -58,7 +58,7 @@ public class HashTable {
         if(toInsert==null)
             throw new NullPointerException();
         if(toInsert.length()==0)
-            throw new IllegalArgumentException();
+            return;
         HashList list = getList(hashFunction(toInsert));
         list.insert(toInsert);
         setSize(getSize()+1);

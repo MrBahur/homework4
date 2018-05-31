@@ -75,6 +75,11 @@ public class Messages implements Iterable<Message> {
         Spams spams = new Spams(location);
         HashTable[] hashTables = getHashTables();
         StringBuilder toReturn = new StringBuilder();
+        helperForFindSpams(friends,spams,toReturn,hashTables);
+        if(toReturn.length()!=0) toReturn.deleteCharAt(toReturn.length()-1);
+        return toReturn.toString();
+    }
+    private void helperForFindSpams(BTree friends,Spams spams, StringBuilder toReturn,HashTable[] hashTables){
         boolean areFriends=false;
         boolean isSpam=false;
         int i=0;
@@ -90,8 +95,6 @@ public class Messages implements Iterable<Message> {
             }
             i++;
         }
-        toReturn.deleteCharAt(toReturn.length()-1);
-        return toReturn.toString();
     }
 
     private boolean checkSpam(Spams spams,HashTable hashTable){
@@ -156,7 +159,8 @@ public class Messages implements Iterable<Message> {
     }
 
     private void insertToList(DoublyLinkedList<Message> list, Message toInsert){
-        list.addLast(toInsert);
+        if(!toInsert.getText().equals(""))
+            list.addLast(toInsert);
     }
     private Message handleLine(DoublyLinkedList<Message> list,String line, Message aux){
         if(line.equals("#")) {
@@ -183,11 +187,5 @@ public class Messages implements Iterable<Message> {
             list.setHead(list.getHead().getNext());
         }
         setData(data);
-    }
-    public static void main(String[] args){
-        String location =System.getProperty("user.dir")+"/messages.txt";
-        Messages test = new Messages();
-        test.generateMessages(location);
-
     }
 }

@@ -1,3 +1,10 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Tester {
     public static void main(String args[]){
         int num =1;
@@ -162,15 +169,7 @@ public class Tester {
                 System.out.println("success test " + num);
                 num++;
             }
-            try{
-                testHashTable.insert("");
-                System.out.println("failed test "+num+" can't insert empty String");
-                break;
-            }
-            catch (IllegalArgumentException e){
-                System.out.println("success test " + num);
-                num++;
-            }
+
             //-----------------------------------------------------------------------
             //hash table building test:
             starTime =System.currentTimeMillis();
@@ -186,6 +185,95 @@ public class Tester {
             endTime = System.currentTimeMillis();
             duration = (endTime-starTime);
             System.out.println("test "+num+":\nEnter all those keys took "+ duration+" milliseconds\nit took me around 20 milliseconds\nif your number is around that area its good.");
+            //-----------------------------------------------------------------------
+            //Creating files and trees to test
+            BTree testBTreeFirst = new BTree("10");
+            BTree testBTreeSecond = new BTree("10");
+            //testBTreeSecond and testBTreeFirst should be identical after creating them both.
+            try {
+                FileWriter fileWriter = new FileWriter("FriendsTester1.txt");
+                PrintWriter writer = new PrintWriter(fileWriter);
+                RandomString gen = new RandomString(8, ThreadLocalRandom.current());
+                for(int i =0; i<200;i++){
+                    String string = gen.nextString()+" & "+gen.nextString();
+                    testBTreeFirst.insert(string);
+                    writer.println(string);
+                }
+                writer.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                break;
+            }
+            testBTreeSecond.createFullTree(System.getProperty("user.dir")+"/FriendsTester1.txt");
+            if(testBTreeFirst.toString().equals(testBTreeSecond.toString())){
+                System.out.println("success test " + num);
+                num++;
+            }
+            else{
+                System.out.println(testBTreeFirst.toString());
+                System.out.println(testBTreeSecond.toString());
+                System.out.println("failed test "+num+" one of your methods of creating a BTree isn't working\nthe tree that created using File is different from the tree created using inserts");
+                break;
+            }
+            //creating allot of messages
+            try {
+                FileWriter fileWriter = new FileWriter("MessageTester1.txt");
+                PrintWriter writer = new PrintWriter(fileWriter);
+                RandomString gen = new RandomString(5,ThreadLocalRandom.current());
+                File friends = new File(System.getProperty("user.dir")+"/FriendsTester1.txt");
+                try {
+                    Scanner scan = new Scanner(friends);
+                    while (scan.hasNextLine()){
+                        String line = scan.nextLine();
+                        StringBuilder builder = new StringBuilder();
+                        for(int i=0;i<100;i++){//writing the message (100 words long)
+                            builder.append(gen.nextString()+" ");
+                        }
+                        builder.deleteCharAt(builder.length()-1);
+                        writer.println("From:"+line.substring(0,line.indexOf('&')-1));
+                        writer.println("To:"+line.substring(line.indexOf('&')+1));
+                        writer.println(builder.toString());
+                        builder.delete(0,builder.length()-1);
+                        writer.println("#");
+                    }
+                    fileWriter.close();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    break;
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            //creating some spam messages
+            try{
+                FileWriter fileWriter = new FileWriter("SpamTester1.txt");
+                PrintWriter writer = new PrintWriter(fileWriter);
+                RandomString gen = new RandomString(5,ThreadLocalRandom.current());
+                for(int i = 1; i<16;i++){
+                    writer.println(gen.nextString()+" "+ i);
+                }
+                fileWriter.close();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                break;
+            }
+            Messages messagesTester = new Messages();
+            messagesTester.generateMessages(System.getProperty("user.dir")+"/MessageTester1.txt");
+            messagesTester.createHashTables("50");
+            String spamMessages = messagesTester.findSpams(System.getProperty("user.dir")+"/SpamTester1.txt",testBTreeSecond);
+            if(spamMessages.equals("")){
+                System.out.println("success test " + num);
+                num++;
+            }
+            else{
+                System.out.println("failed test " + num+" because all the messages are from a friend to another friend");
+                break;
+            }
+
         }while (false);
     }
 }
