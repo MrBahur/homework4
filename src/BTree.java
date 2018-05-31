@@ -11,7 +11,7 @@ public class BTree {
     private final int t;
     private int size;
     private BTree(int t) {
-        if(t<1)
+        if(t<=1)
             throw new IllegalArgumentException();
         this.t = t;
         this.root = new BTreeNode(t);
@@ -50,14 +50,17 @@ public class BTree {
             throw new IllegalArgumentException();
         this.root = root;
     }
+    //Methods
 
+    /**
+     * insert a new key to the BTree
+     * @param key to insert
+     */
     public void insert(String key) {
-        if(key==null)
-            throw new NullPointerException();
-        if(key.length()==0)
-            throw new IllegalArgumentException();
+        if(key==null) throw new NullPointerException();             //can't insert null to tree
+        if(key.length()==0) throw new IllegalArgumentException();   //can't insert empty String as a key
         BTreeNode tmp = getRoot();
-        if (tmp.isFull()) {
+        if (tmp.isFull()) {                                         //handling the case that the root is full
             BTreeNode newRoot = new BTreeNode(getT());
             newRoot.setKid(0, tmp);
             newRoot.setLeaf(false);
@@ -65,21 +68,33 @@ public class BTree {
             setRoot(newRoot);
             newRoot.splitChild(0);
             newRoot.insert(key);
-        } else {
+        } else{                                                     //handling the case the rood isn't fool
             tmp.insert(key);
         }
-        setSize(getSize()+1);
+        setSize(getSize()+1);                                       //increasing size of total keys in tree
     }
-    //Methods
-    public String search(String key) {
-        if(key==null)
+
+    /**
+     * this function search the tree
+     * @param key key to search
+     * @return the object if found, null else
+     */
+    public String search(String key) {                              //this is public because the normal BTree need to support Search(key)
+        if(key==null)                                               //no nulls in my tree
             throw new NullPointerException();
-        if(key.length()==0)
+        if(key.length()==0)                                         //no empty Strings as keys in my tree
             throw new IllegalArgumentException();
-        return root.search(key);
+        return root.search(key);                                    //passing the mission to the root
     }
+
+    /**
+     * the real search i am using this wotk
+     * @param key1 first friend to look for
+     * @param key2 second friend to look for
+     * @return true if those two are friends, false otherwise
+     */
     public boolean search(String key1, String key2){
-        if(key1==null|key2==null)
+        if(key1==null|key2==null)                                   //in this work, allays search for two keys separated by " & "
             throw new NullPointerException();
         if((search(key1+" & "+key2)==null)&& search(key2+" & "+key1)==null){
             return false;
@@ -89,17 +104,21 @@ public class BTree {
         }
     }
 
+    /**
+     * create key from file
+     * @param location the locaition of the file
+     */
     public void createFullTree(String location) {
         if(location==null)
             throw new NullPointerException();
         File friendsList = new File(location);
         Scanner input = null;
         try {
-            input = new Scanner(friendsList);
+            input = new Scanner(friendsList);       //creating scanner to use for reading the file
             String line;
             while (input.hasNextLine()) {
-                line = input.nextLine();
-                if (line.length() == 0) {continue;}
+                line = input.nextLine();        //moving line by line and adding it to the tree
+                if (line.length() == 0) {continue;}     //could happen (like in line 1)
                 this.insert(line);
             }
         } catch(FileNotFoundException ex){
@@ -107,32 +126,42 @@ public class BTree {
         }
     }
 
+
+    /**
+     * returning a BFS String that made from the tree
+     */
     @Override
     public String toString() {
         return BFS().toString();
     }
 
+    /**
+     *don't really have something to say about it
+     * using the normal algorithm for BFS printing a tree using a queue
+     * @return a StringBuilder that holds the String in BFS order
+     */
     private StringBuilder BFS(){
         StringBuilder toReturn = new StringBuilder();
-        Queue queue = new Queue();
-        queue.enqueue(getRoot());
-        WrapInt currentHeight = new WrapInt(getRoot().getHeight()+1);
-        while (!queue.isEmpty()){
+        Queue queue = new Queue();              //creating the queue
+        queue.enqueue(getRoot());               //adding the root to the queue
+        WrapInt currentHeight = new WrapInt(getRoot().getHeight()+1);       //adding the height of the tree to WrapInt obj inorder to send it by reference to the function
+        while (!queue.isEmpty()){                   //while the Queue isn't empty we still have node to take care of
             Object obj = queue.dequeue();
-            toReturn = function(queue,toReturn, obj, currentHeight);
+            toReturn = helperForBfs(queue,toReturn, obj, currentHeight);            //this function is spited to 2, in case object is String, and in case its a node
         }
         return toReturn;
     }
-    private StringBuilder function(Queue queue,StringBuilder toReturn, Object obj, WrapInt currentHeight){
+    private StringBuilder helperForBfs(Queue queue,StringBuilder toReturn, Object obj, WrapInt currentHeight){
         if(obj instanceof String)
-            toReturn.append((String)obj);
+            toReturn.append((String)obj);                                       //dealing with the String case
         else if(obj instanceof BTreeNode)
-            function(queue,toReturn,(BTreeNode)obj,currentHeight);
+            helperForBfs(queue,toReturn,(BTreeNode)obj,currentHeight);          //dealing with the Node case
         else
             throw new IllegalArgumentException();
         return toReturn;
     }
-    private void function(Queue queue, StringBuilder toReturn, BTreeNode node, WrapInt currentHeight){
+
+    private void helperForBfs(Queue queue, StringBuilder toReturn, BTreeNode node, WrapInt currentHeight){      //this function deals with the Node case
          if((node.getHeight()==currentHeight.getValue())&!node.getLeaf()){
             queue.enqueue("^");
         }

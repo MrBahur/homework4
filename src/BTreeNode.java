@@ -66,32 +66,47 @@ public class BTreeNode {
     }
 
     //Methods
+
+    /**
+     * boolean function that tells us if the node is full0
+     * @return true if the node is full, false otherwise
+     */
     public boolean isFull(){
         return getSize()==getT()*2-1;
     }
+
+    /**
+     * Searching in a node if not found, recursively search in the child (respectively)
+     * @param key key to search
+     * @return nul if not found, obj if this is he's key.
+     */
     public String search(String key)
     {
         int i=0;
         while(i<getSize()&&isLarge(key,getKey(i))){
             i++;
         }
-        if(i<getSize()&&key.equals(getKey(i))){
+        if(i<getSize()&&key.equals(getKey(i))){//found
             return getKey(i);
         }
-        else if(getLeaf()){
+        else if(getLeaf()){     //not found
             return null;
         }
         else{
-            return getKid(i).search(key);
+            return getKid(i).search(key);//might be in child
         }
     }
 
+    /**
+     * inserting a key to a node
+     * @param key the node to insert
+     */
     public void insert(String key){
         int i=getSize()-1;
         if(getLeaf())
-            handleLeaf(i,key);
+            handleLeaf(i,key);//making room to insert(moving all the relevant keys right ). can't be full cuz of BTree
         else
-            handleNotLeaf(i,key);
+            handleNotLeaf(i,key);//making room  to insert, might be full because it's not a leaf.
     }
     private void handleLeaf(int i,String key){
         while(i>=0&&isLess(key,getKey(i))){
@@ -107,7 +122,7 @@ public class BTreeNode {
         }
         i++;
         BTreeNode tmp = getKid(i);
-        if(tmp.isFull()){
+        if(tmp.isFull()){       //handling the case the child is full
             splitChild(i);
             if(isLarge(key,tmp.getKey(i)))
                 i++;
@@ -115,36 +130,61 @@ public class BTreeNode {
         tmp=getKid(i);
         tmp.insert(key);
     }
+
+    /**
+     * split child is one of the most impotent method in BTree and this is what keep it safe (all Nodes in the needed size)
+     * @param i the index of the child we need to split
+     */
     public void splitChild (int i)
     {
-        BTreeNode leftLeaf = new BTreeNode(getT());
-        BTreeNode rightLeaf = new BTreeNode(getT());
-        BTreeNode tmp = this.getKid(i);
+        BTreeNode leftLeaf = new BTreeNode(getT());         //creating the left Node
+        BTreeNode rightLeaf = new BTreeNode(getT());        //creating the right Node
+        BTreeNode tmp = this.getKid(i);                     //holding the child we want to split
         String tmpKey = tmp.getKey(getT()-1);
-        setLeavesForSpilt(rightLeaf,leftLeaf,tmp);
+        setLeavesForSpilt(rightLeaf,leftLeaf,tmp);          //copying all the relevant items into right and leaf leave
         for(int j=getSize()-1;j>=i;j--)
-            setKey(j+1,getKey(j));
+            setKey(j+1,getKey(j));                      //moving all the keys from i right
         for(int j=getSize();j>=i;j--)
-            setKid(j+1,getKid(j));
-        setKey(i,tmpKey);
-        setSize(getSize()+1);
-        setKid(i,leftLeaf);
+            setKid(j+1,getKid(j));                      //moving all the kids from i right
+        setKey(i,tmpKey);                                   //putting the kid in the place
+        setSize(getSize()+1);                               //setting the size
+        setKid(i,leftLeaf);                                 //setting the relevant kids (left then right)
         setKid(i+1,rightLeaf);
     }
+
+    /**
+     * comparing between to Strings using isLess making the code more readable
+     * @param s1 first string
+     * @param s2 second string
+     * @return s1 is less then s2
+     */
     private boolean isLess(String s1, String s2){
         return s1.compareTo(s2)<0;
     }
+    /**
+     * comparing between to Strings using isLarge making the code more readable
+     * @param s1 first string
+     * @param s2 second string
+     * @return s1 is more then s2
+     */
     private boolean isLarge(String s1, String s2)
     {
         return s1.compareTo(s2)>0;
     }
+
+    /**
+     * the function does what her names says..
+     * @param rightLeaf the left leaf
+     * @param leftLeaf the right leaf
+     * @param tmp the kid we want to split
+     */
     private void setLeavesForSpilt(BTreeNode rightLeaf, BTreeNode leftLeaf, BTreeNode tmp)
     {
-        for(int j=0;j<getT()-1;j++){
+        for(int j=0;j<getT()-1;j++){        //copying keys
             leftLeaf.setKey(j,tmp.getKey(j));
             rightLeaf.setKey(j,tmp.getKey(j+getT()));
         }
-        if(!tmp.getLeaf()){
+        if(!tmp.getLeaf()){                 //copying kids
             for(int j=0;j<=getT()-1;j++){
                 leftLeaf.setKid(j, tmp.getKid(j));
                 rightLeaf.setKid(j, tmp.getKid(j + getT()));
@@ -152,6 +192,13 @@ public class BTreeNode {
         }
         setValuesForLeavesInSplit(rightLeaf,leftLeaf,tmp);
     }
+
+    /**
+     * setting the child we split values (isLeaf, Height and Size)
+     * @param rightLeaf the left leaf
+     * @param leftLeaf the right leaf
+     * @param tmp the kid we want to split
+     */
     private void setValuesForLeavesInSplit(BTreeNode rightLeaf, BTreeNode leftLeaf, BTreeNode tmp){
         leftLeaf.setLeaf(tmp.getLeaf());
         rightLeaf.setLeaf(tmp.getLeaf());
@@ -161,8 +208,7 @@ public class BTreeNode {
         rightLeaf.setSize(getT()-1);
     }
 
-    public String stringifyNode() {
-        String joined = Stream.of(getKeys()).filter(s -> s != null && !s.isEmpty()).collect(joining(","));
-        return   joined;
+    public String stringifyNode() {                         //just making array to String with ',; between every key, without Nulls and empty cells.
+        return  Stream.of(getKeys()).filter(s -> s != null && !s.isEmpty()).collect(joining(","));
     }
 }

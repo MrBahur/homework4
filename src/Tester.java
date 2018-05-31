@@ -248,7 +248,7 @@ public class Tester {
                         builder.delete(0,builder.length()-1);
                         writer.println("#");
                     }
-                    fileWriter.close();
+                    writer.close();
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -266,7 +266,7 @@ public class Tester {
                 for(int i = 1; i<16;i++){
                     writer.println(gen.nextString()+" "+ i);
                 }
-                fileWriter.close();
+                writer.close();
             }
             catch (Exception e){
                 e.printStackTrace();
