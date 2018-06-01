@@ -1,3 +1,10 @@
+/*
+ * didn't really need that one...
+ * could have used Node of T when T is a pair <int,String>...
+ * but this works to i guess.
+ * actually, this is exactly what it is.
+ */
+
 public class HashListElement {
     private String word;
     private int numberOfInstances;

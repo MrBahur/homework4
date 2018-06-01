@@ -1,3 +1,10 @@
+/*
+ *well... a Queue
+ * FIFO
+ * didn't used pick() but its important to be able to know who is your first
+ * element in the queue
+ */
+
 public class Queue {
     DoublyLinkedList<Object> data;
 

@@ -1,3 +1,11 @@
+/*
+ *  not much to say about this HashList
+ *  used simple DoublyLinkedList (that i implanted) to implement it
+ *  pretty simple.
+ *
+ */
+
+
 public class HashList {
     private DoublyLinkedList<HashListElement> list;
 
@@ -14,10 +22,10 @@ public class HashList {
     //Methods
     public void insert(String toInsert) {
         HashListElement aux = search(toInsert);
-        if(aux!=null){
+        if(aux!=null){                      //if i already inserted this key then i just set NumberOfInstances to be +1
             aux.setNumberOfInstances(aux.getNumberOfInstances()+1);
         }
-        else {
+        else {                              //if i haven't then i insert it to the list.
             getList().addFirst(new HashListElement(toInsert));
         }
     }

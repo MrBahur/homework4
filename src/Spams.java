@@ -25,7 +25,7 @@ public class Spams implements Iterable<Spam> {
     public int getCurr() {
         return curr;
     }
-//Setters:
+    //Setters:
 
     public void setData(Spam[] data) {
         this.data = data;
@@ -35,6 +35,8 @@ public class Spams implements Iterable<Spam> {
         this.curr = curr;
     }
 
+
+    //Iterator:
     @Override
     public Iterator<Spam> iterator() {
         setCurr(0);
@@ -55,9 +57,14 @@ public class Spams implements Iterable<Spam> {
             }
         };
     }
+    //Methods:
 
+    /**
+     * initiate the Spam DB
+     * @param location  location of the spam file
+     */
     private void initiateData(String location) {
-        DoublyLinkedList<Spam> list = new DoublyLinkedList<>();
+        DoublyLinkedList<Spam> list = new DoublyLinkedList<>(); //create a list to hold the spams
         File spamWords = new File(location);
         Spam aux = new Spam();
         try {
@@ -65,14 +72,22 @@ public class Spams implements Iterable<Spam> {
             while(input.hasNextLine()){
                 String line = input.nextLine();
                 if(line.length()==0){continue;}
-                aux= handleLine(list,line,aux);
+                aux= handleLine(list,line,aux);//handling a line
             }
         }
         catch (FileNotFoundException ex){
             ex.printStackTrace();
         }
-        createArrayFromList(list);
+        createArrayFromList(list);  //creating an array from the list
     }
+
+    /**
+     * Handaling a line for the Spam message
+     * @param list the list we will insert the spam word into
+     * @param line  the line we handling
+     * @param aux   a spam message to be inserted into the list
+     * @return  new spam message
+     */
     private Spam handleLine(DoublyLinkedList<Spam> list, String line, Spam aux){
         int i;
         for(i=0;line.charAt(i)!=' ';i++);
@@ -81,6 +96,11 @@ public class Spams implements Iterable<Spam> {
         list.addLast(aux);
         return new Spam();
     }
+
+    /**
+     * Creating array from the list we created of the spam messages
+     * @param list  the list
+     */
     private void createArrayFromList(DoublyLinkedList<Spam> list) {
         int size =list.getSize();
         Spam [] data = new Spam[size];

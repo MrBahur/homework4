@@ -1,3 +1,11 @@
+/*
+A nod for thr linkedList
+i got some methods i didn't used here (actually only setData)
+but its not because is useless, only in this assignment,
+no need to change items after we insert them to the DB
+but in the realWorld things are changing all the time..
+ */
+
 public class Node<T> {
     private Node<T> next;
     private Node<T> prev;

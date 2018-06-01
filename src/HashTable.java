@@ -40,13 +40,7 @@ public class HashTable {
         this.size = size;
     }
 
-    public int hashFunction(String toHash){
-        int hash = 7;
-        for(int i=0;i<toHash.length();i++){
-            hash = hash*31+toHash.charAt(i);
-        }
-        return Math.abs(hash%getM());
-    }
+
 
     public void setList(HashList list, int i) {
         HashList[] lists = getLists();
@@ -54,6 +48,21 @@ public class HashTable {
     }
     //Methods
 
+    public int hashFunction(String toHash){
+        int hash = 7;           //prime number
+        for(int i=0;i<toHash.length();i++){
+            hash = hash*31+toHash.charAt(i);        //31 is another prime number.
+                                                    //we learned that this is a good way to hash a string, normally i would have choose better hashFunction from a Universal HashFunction
+                                                    //collection in a random way, but you didn't let me so...
+        }
+        return Math.abs(hash%getM());
+    }
+
+    /**
+     * pretty straight forward, using a HashFunction, i choose the correct list to insert the item to
+     * and i insert it to it's head.
+     * @param toInsert the key i want to insert
+     */
     public void insert(String toInsert){
         if(toInsert==null)
             throw new NullPointerException();

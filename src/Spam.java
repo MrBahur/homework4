@@ -1,3 +1,9 @@
+/*
+pretty much straight forward...
+2 strings, getters setters and constructors.
+could have used Struct for that actually...
+ */
+
 public class Spam {
 
     private String word;

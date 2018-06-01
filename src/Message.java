@@ -1,3 +1,9 @@
+/*
+pretty much straight forward...
+3 strings, getters setters and constructors.
+could have used Struct for that actually...
+ */
+
 public class Message {
 
     private String recipient;
